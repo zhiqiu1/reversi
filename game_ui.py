@@ -61,13 +61,22 @@ class UI:
 
         # Draw the disks. AI takes the move if it goes first.
         self._place_and_draw_the_board_and_check_game_over(None if self._player_color == 'B'
-                                                           else game_ai.AI(self.game, self.search_depth).MOVE)
+                                                           else game_ai.minimax_with_alpha_beta(self.game, 0,
+                                                                                                self.search_depth,
+                                                                                                float('-inf'),
+                                                                                                float('inf')))
 
         # Code for AI against AI. Setting both AIs' search depth to 4 in an 8x8 board will create a interesting shape.
-        # while not self.game.game_is_over:
-        #     self._place_and_draw_the_board_and_check_game_over(game_ai.AI(self.game, 4).MOVE)
-        #     if not self.game.game_is_over:
-        #         self._place_and_draw_the_board_and_check_game_over(game_ai.AI(self.game, 4).MOVE)
+        while not self.game.game_is_over:
+            self._place_and_draw_the_board_and_check_game_over(game_ai.minimax_with_alpha_beta(self.game, 0,
+                                                                                               4,
+                                                                                               float('-inf'),
+                                                                                               float('inf')))
+            if not self.game.game_is_over:
+                self._place_and_draw_the_board_and_check_game_over(game_ai.minimax_with_alpha_beta(self.game, 0,
+                                                                                                   3,
+                                                                                                   float('-inf'),
+                                                                                                   float('inf')))
 
     def _move(self, event):
         x = divmod(event.x, 100)[0]
@@ -75,7 +84,10 @@ class UI:
         if self.game.is_valid_move((y, x)):
             self._place_and_draw_the_board_and_check_game_over((y, x))
             if not self.game.game_is_over:
-                self._place_and_draw_the_board_and_check_game_over(game_ai.AI(self.game, self.search_depth).MOVE)
+                self._place_and_draw_the_board_and_check_game_over(game_ai.minimax_with_alpha_beta(self.game, 0,
+                                                                                                   self.search_depth,
+                                                                                                   float('-inf'),
+                                                                                                   float('inf')))
 
     def _place_and_draw_the_board_and_check_game_over(self, move=None):
         # place
